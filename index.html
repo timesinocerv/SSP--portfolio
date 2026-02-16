@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomáš – Portfolio</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #030303;
+            --bg-secondary: #080808;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --accent-gradient: linear-gradient(90deg, #a855f7, #ec4899);
+            --accent-gradient-soft: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.1));
+            --accent-glow: 0 0 30px rgba(168, 85, 247, 0.15);
+            --border-color: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --radius-full: 100px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: rgba(79,125,245,0.3);
+            color: #fff;
+        }
+
+        /* ===== UTILITY ===== */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: var(--accent-gradient-soft);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            color: var(--accent-purple);
+            padding: 8px 18px;
+            border-radius: var(--radius-full);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 50px;
+        }
+
+        /* ===== TYPEWRITER ===== */
+        .cursor {
+            display: inline-block;
+            color: var(--accent-purple);
+            font-weight: 300;
+            animation: blink 0.8s step-end infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        #typewriter {
+            border-right: none;
+        }
+
+        /* ===== FADE-IN ANIMATION ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 16px 0;
+            background: rgba(10,10,15,0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .nav-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(79,125,245,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: var(--radius-full);
+            margin-bottom: 28px;
+        }
+
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: #34d399;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 7vw, 4.2rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1.5px;
+            margin-bottom: 8px;
+        }
+
+        .hero h1 .gradient-text {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero h2 {
+            font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 540px;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 30px;
+            border-radius: var(--radius-full);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-family: var(--font);
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(79,125,245,0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 30px rgba(79,125,245,0.45);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ===== CARDS GRID ===== */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        /* ===== PILLAR CARDS ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 36px 30px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--accent-glow);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            background: var(--accent-gradient-soft);
+            border: 1px solid var(--border-color);
+        }
+
+        .card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .card p,
+        .card li {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card ul li::before {
+            content: '→';
+            margin-right: 10px;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* ===== PROJECT CARDS ===== */
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 36px 30px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--accent-glow);
+        }
+
+        .project-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+        }
+
+        .status-done {
+            color: #34d399;
+            background: rgba(52,211,153,0.1);
+            border: 1px solid rgba(52,211,153,0.2);
+        }
+
+        .status-wip {
+            color: #fbbf24;
+            background: rgba(251,191,36,0.1);
+            border: 1px solid rgba(251,191,36,0.2);
+        }
+
+        .project-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .project-card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tech-tag {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            background: rgba(79,125,245,0.1);
+            border: 1px solid rgba(79,125,245,0.2);
+            padding: 5px 14px;
+            border-radius: var(--radius-full);
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .project-link:hover {
+            color: var(--accent-blue);
+        }
+
+        /* ===== COURSE CARDS ===== */
+        .course-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 36px 30px;
+            transition: var(--transition);
+        }
+
+        .course-card:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+        }
+
+        .course-year {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            background: rgba(139,92,246,0.1);
+            border: 1px solid rgba(139,92,246,0.2);
+            padding: 5px 14px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .course-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .course-card .course-org {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .course-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .course-card li {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        .course-card li::before {
+            content: '✦';
+            margin-right: 8px;
+            color: var(--accent-purple);
+            font-size: 0.7rem;
+        }
+
+        /* ===== SKILLS ===== */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .skill-group {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 30px;
+            transition: var(--transition);
+        }
+
+        .skill-group:hover {
+            border-color: var(--border-hover);
+        }
+
+        .skill-group h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        .skill-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-chip {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 8px 18px;
+            border-radius: var(--radius-full);
+            transition: var(--transition);
+        }
+
+        .skill-chip:hover {
+            border-color: var(--accent-blue);
+            background: rgba(79,125,245,0.08);
+        }
+
+        /* ===== CONTACT ===== */
+        .contact-section {
+            text-align: center;
+        }
+
+        .contact-section .section-subtitle {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-trigger-wrap {
+            display: flex;
+            justify-content: center;
+        }
+
+        .contact-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 22px 48px;
+            border-radius: var(--radius);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            background: var(--accent-gradient);
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-trigger::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .contact-trigger:hover::before {
+            transform: translateX(100%);
+        }
+
+        .contact-trigger:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(168, 85, 247, 0.35);
+        }
+
+        .contact-trigger svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s, visibility 0.4s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: linear-gradient(160deg, #0c1425 0%, #0f0a1e 100%);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 28px;
+            padding: 0;
+            width: 92%;
+            max-width: 480px;
+            position: relative;
+            transform: scale(0.8) translateY(40px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            position: relative;
+            padding: 48px 40px 32px;
+            text-align: center;
+        }
+
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+            color: var(--text-muted);
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-color: var(--accent-purple);
+            transform: rotate(90deg);
+        }
+
+        .modal-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 32px rgba(168, 85, 247, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .modal-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .modal-body {
+            padding: 0 32px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-link::after {
+            content: '→';
+            position: absolute;
+            right: 24px;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateX(-8px);
+        }
+
+        .modal-link:hover::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .modal-link:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: var(--accent-purple);
+            transform: translateX(6px);
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.1);
+        }
+
+        .modal-link-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .modal-link:hover .modal-link-icon {
+            transform: scale(1.1);
+        }
+
+        .modal-link-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .modal-link-icon.ml-email {
+            background: rgba(168, 85, 247, 0.12);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            color: #a855f7;
+        }
+
+        .modal-link-icon.ml-ig {
+            background: linear-gradient(135deg, rgba(131, 58, 180, 0.15), rgba(253, 29, 29, 0.12), rgba(252, 176, 69, 0.1));
+            border: 1px solid rgba(225, 48, 108, 0.25);
+            color: #e1306c;
+        }
+
+        .modal-link-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .modal-link-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .modal-link-handle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .modal-footer {
+            padding: 20px 32px;
+            background: rgba(255,255,255,0.02);
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .modal-footer span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        @media (max-width: 480px) {
+            .modal {
+                width: 96%;
+                border-radius: 20px;
+            }
+
+            .modal-header {
+                padding: 40px 24px 24px;
+            }
+
+            .modal-body {
+                padding: 0 20px 28px;
+            }
+
+            .modal-footer {
+                padding: 16px 20px;
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        footer span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .grid-3,
+            .skills-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            section {
+                padding: 70px 0;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background: rgba(10,10,15,0.95);
+                backdrop-filter: blur(20px);
+                padding: 20px 24px;
+                gap: 16px;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .grid-3,
+            .grid-2,
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .contact-card {
+                padding: 36px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="nav-logo">Tomáš<span>.</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#formuje">O mně</a></li>
+                <li><a href="#projekty">Projekty</a></li>
+                <li><a href="#kurzy">Kurzy</a></li>
+                <li><a href="#dovednosti">Dovednosti</a></li>
+                <li><a href="#swot">SWOT</a></li>
+                <li><a href="#" class="nav-btn" id="navContactBtn">Kontakt</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge fade-in">
+                    <span class="dot"></span>
+                    Otevřený novým příležitostem
+                </div>
+                <h1 class="fade-in">
+                    Vítejte v mém portfoliu
+                </h1>
+                <h2 class="fade-in">
+                    <span id="typewriter"></span><span class="cursor">|</span>
+                </h2>
+                <p class="fade-in">
+                    Aktivně se učím programování a rozvíjím vlastní projekty.
+                    Věřím v disciplínu, systematickou práci a&nbsp;neustálé zlepšování.
+                    Hledám školu, která mi pomůže tento zápal proměnit v&nbsp;profesi.
+                </p>
+                <div class="hero-buttons fade-in">
+                    <a href="#projekty" class="btn btn-primary">
+                        Projekty ↓
+                    </a>
+                    <a href="#kontakt" class="btn btn-secondary">
+                        Kontakt
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CO MĚ FORMUJE ===== -->
+    <section id="formuje">
+        <div class="container">
+            <div class="fade-in">
+                <span class="section-label">🧩 O mně</span>
+                <h2 class="section-title">Co mě formuje</h2>
+                <p class="section-subtitle">
+                    Tři pilíře, na kterých stavím svůj přístup k práci i osobnímu rozvoji.
+                </p>
+            </div>
+            <div class="grid-3">
+                <div class="card fade-in">
+                    <div class="card-icon">🧠</div>
+                    <h3>Strategické myšlení</h3>
+                    <ul>
+                        <li>Přemýšlím nad strukturou projektů</li>
+                        <li>Snažím se chápat logiku, ne&nbsp;jen kopírovat kód</li>
+                    </ul>
+                </div>
+                <div class="card fade-in">
+                    <div class="card-icon">💡</div>
+                    <h3>Kreativita</h3>
+                    <ul>
+                        <li>Navrhuji vlastní řešení</li>
+                        <li>Zajímám se o přehledný a&nbsp;moderní design</li>
+                    </ul>
+                </div>
+                <div class="card fade-in">
+                    <div class="card-icon">🏋️</div>
+                    <h3>Disciplína</h3>
+                    <ul>
+                        <li>4 roky se věnuji fitness</li>
+                        <li>Rekreačně trénuji box</li>
+                        <li>Sport mě naučil vytrvalosti a&nbsp;systematické práci</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PROJEKTY ===== -->
+    <section id="projekty">
+        <div class="container">
+            <div class="fade-in">
+                <span class="section-label">🚀 Projekty</span>
+                <h2 class="section-title">Na čem pracuji</h2>
+                <p class="section-subtitle">
+                    Praktické projekty, na kterých se učím a rozvíjím své dovednosti.
+                </p>
+            </div>
+            <div class="grid-2">
+                <div class="project-card fade-in">
+                    <span class="project-status status-done">● Dokončeno</span>
+                    <h3>To-Do List aplikace</h3>
+                    <p>
+                        Responzivní aplikace pro správu úkolů s&nbsp;možností nastavení priority.
+                        Umožňuje uživatelům efektivně organizovat a&nbsp;sledovat své denní úkoly.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">HTML</span>
+                        <span class="tech-tag">CSS</span>
+                        <span class="tech-tag">JavaScript</span>
+                    </div>
+                    <a href="#" class="project-link" target="_blank">
+                        Přejít do Projektu ↗
+                    </a>
+                </div>
+                <div class="project-card fade-in">
+                    <span class="project-status status-wip">◐ Ve vývoji</span>
+                    <h3>Projekt #2</h3>
+                    <p>
+                        Pracuji na dalším projektu, který sem brzy doplním.
+                        Chci si vyzkoušet pokročilejší funkce a&nbsp;nové technologie.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Připravuji</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== KURZY ===== -->
+    <section id="kurzy">
+        <div class="container">
+            <div class="fade-in">
+                <span class="section-label">📚 Vzdělávání</span>
+                <h2 class="section-title">Kurzy a workshopy</h2>
+                <p class="section-subtitle">
+                    Aktivně se vzdělávám i mimo školu. Tady jsou kurzy, které mi daly nejvíc.
+                </p>
+            </div>
+            <div class="grid-2">
+                <div class="course-card fade-in">
+                    <span class="course-year">2025</span>
+                    <h3>Letní škola vývoje webových stránek</h3>
+                    <p class="course-org">SSPŠ</p>
+                    <ul>
+                        <li>Základy webového vývoje</li>
+                        <li>Vytvoření vlastní webové stránky</li>
+                    </ul>
+                </div>
+                <div class="course-card fade-in">
+                    <span class="course-year">2024</span>
+                    <h3>AI Mastery</h3>
+                    <p class="course-org">SSPŠ</p>
+                    <ul>
+                        <li>Práce s AI nástroji (v0.dev, Perplexity, Cursor)</li>
+                        <li>Prompt engineering</li>
+                        <li>Efektivní využití AI při vývoji</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== DOVEDNOSTI ===== -->
+    <section id="dovednosti">
+        <div class="container">
+            <div class="fade-in">
+                <span class="section-label">⚡ Dovednosti</span>
+                <h2 class="section-title">Co umím a v čem rostu</h2>
+                <p class="section-subtitle">
+                    Jsem na začátku cesty, ale s vysokou motivací a zájmem o&nbsp;neustálé zlepšování.
+                </p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-group fade-in">
+                    <h3>Základy</h3>
+                    <div class="skill-chips">
+                        <span class="skill-chip">HTML</span>
+                        <span class="skill-chip">CSS</span>
+                        <span class="skill-chip">JavaScript</span>
+                    </div>
+                </div>
+                <div class="skill-group fade-in">
+                    <h3>Nástroje</h3>
+                    <div class="skill-chips">
+                        <span class="skill-chip">GitHub</span>
+                        <span class="skill-chip">AI nástroje</span>
+                        <span class="skill-chip">VS Code</span>
+                    </div>
+                </div>
+                <div class="skill-group fade-in">
+                    <h3>Silné stránky</h3>
+                    <div class="skill-chips">
+                        <span class="skill-chip">Strategické myšlení</span>
+                        <span class="skill-chip">Kreativita</span>
+                        <span class="skill-chip">Ochota učit se</span>
+                        <span class="skill-chip">Disciplína</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SWOT ANALÝZA ===== -->
+    <section id="swot">
+        <div class="container">
+            <div class="fade-in">
+                <span class="section-label">📊 Analýza</span>
+                <h2 class="section-title">IT SWOT Analýza</h2>
+                <p class="section-subtitle">
+                    Moje silné stránky, oblasti pro růst a příležitosti v technologickém světě.
+                </p>
+            </div>
+            <div class="grid-2">
+                <div class="card fade-in">
+                    <div class="card-icon" style="background: rgba(52, 211, 153, 0.1); border-color: rgba(52, 211, 153, 0.2); color: #34d399;">💪</div>
+                    <h3>Silné stránky (Strengths)</h3>
+                    <ul>
+                        <li>Rychlé osvojování nových technologií</li>
+                        <li>Silná disciplína a vytrvalost (ze sportu)</li>
+                        <li>Zájem o moderní AI nástroje a efektivitu</li>
+                    </ul>
+                </div>
+                <div class="card fade-in">
+                    <div class="card-icon" style="background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.2); color: #fbbf24;">📉</div>
+                    <h3>Slabé stránky (Weaknesses)</h3>
+                    <ul>
+                        <li>Chybějící komerční zkušenost</li>
+                        <li>Zatím omezený rozsah pokročilých technologií</li>
+                        <li>Potřeba hlubšího studia backend procesů</li>
+                    </ul>
+                </div>
+                <div class="card fade-in">
+                    <div class="card-icon" style="background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2); color: #a855f7;">🌟</div>
+                    <h3>Příležitosti (Opportunities)</h3>
+                    <ul>
+                        <li>Rozvoj v oblasti Full-stack vývoje</li>
+                        <li>Využití AI k akceleraci programování</li>
+                        <li>Networking v rámci IT komunity a kurzů</li>
+                    </ul>
+                </div>
+                <div class="card fade-in">
+                    <div class="card-icon" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: #ef4444;">⚠️</div>
+                    <h3>Hrozby (Threats)</h3>
+                    <ul>
+                        <li>Vysoká konkurence na trhu juniorů</li>
+                        <li>Rychle se měnící technologické standardy</li>
+                        <li>Riziko přílišného spoléhání na AI bez pochopení základů</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== KONTAKT ===== -->
+    <section id="kontakt" class="contact-section">
+        <div class="container">
+            <div class="fade-in">
+                <span class="section-label">✉️ Kontakt</span>
+                <h2 class="section-title">Pojďme se spojit</h2>
+                <p class="section-subtitle">
+                    Budu rád za jakoukoli zpětnou vazbu nebo příležitost k&nbsp;rozhovoru.
+                </p>
+            </div>
+            <div class="contact-trigger-wrap fade-in">
+                <button class="contact-trigger" id="openContact">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Kontaktujte mě
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT MODAL ===== -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal">
+            <button class="modal-close" id="closeContact">&times;</button>
+
+            <div class="modal-header">
+                <div class="modal-avatar">T</div>
+                <h3 class="modal-title">Napište mi</h3>
+                <p class="modal-desc">Vyberte si způsob, který vám vyhovuje.</p>
+            </div>
+
+            <div class="modal-body">
+                <a href="mailto:tomas@jetmouse.cz" class="modal-link">
+                    <div class="modal-link-icon ml-email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div class="modal-link-info">
+                        <span class="modal-link-name">Email</span>
+                        <span class="modal-link-handle">tomas@jetmouse.cz</span>
+                    </div>
+                </a>
+                <a href="https://instagram.com/tomaas.c" target="_blank" class="modal-link">
+                    <div class="modal-link-icon ml-ig">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    </div>
+                    <div class="modal-link-info">
+                        <span class="modal-link-name">Instagram</span>
+                        <span class="modal-link-handle">@tomaas.c</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="modal-footer">
+                Odpovím do <span>24 hodin</span> &mdash; nebojte se napsat!
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <p>© 2025 <span>Tomáš</span>. Portfolio k přihlášce na SSPŠ.</p>
+        </div>
+    </footer>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // Mobile nav toggle
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile nav on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Scroll fade-in animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    // Stagger animation for sibling cards
+                    const parent = entry.target.parentElement;
+                    const siblings = parent.querySelectorAll('.fade-in');
+                    const idx = Array.from(siblings).indexOf(entry.target);
+
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, idx * 100);
+
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Typewriter effect
+        const typewriterEl = document.getElementById('typewriter');
+        const phrases = [
+            'Budoucí student SSPŠ',
+            'Nadšenec do programování',
+            'Web Developer',
+            'Fanoušek moderních technologií',
+            'AI Enthusiast'
+        ];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typeSpeed = 80;
+        const deleteSpeed = 40;
+        const pauseAfterType = 2000;
+        const pauseAfterDelete = 400;
+
+        function typewrite() {
+            const currentPhrase = phrases[phraseIndex];
+
+            if (!isDeleting) {
+                typewriterEl.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+
+                if (charIndex === currentPhrase.length) {
+                    isDeleting = true;
+                    setTimeout(typewrite, pauseAfterType);
+                    return;
+                }
+                setTimeout(typewrite, typeSpeed);
+            } else {
+                typewriterEl.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    setTimeout(typewrite, pauseAfterDelete);
+                    return;
+                }
+                setTimeout(typewrite, deleteSpeed);
+            }
+        }
+
+        typewrite();
+
+        // Contact modal
+        const contactModal = document.getElementById('contactModal');
+        const openBtn = document.getElementById('openContact');
+        const closeBtn = document.getElementById('closeContact');
+
+        openBtn.addEventListener('click', () => {
+            contactModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            contactModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        contactModal.addEventListener('click', (e) => {
+            if (e.target === contactModal) {
+                contactModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && contactModal.classList.contains('active')) {
+                contactModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Nav contact button also opens modal
+        const navContactBtn = document.getElementById('navContactBtn');
+        navContactBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            contactModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    </script>
+
+</body>
+</html>
